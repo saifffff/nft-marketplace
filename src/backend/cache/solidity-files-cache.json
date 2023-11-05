@@ -405,8 +405,8 @@
       ]
     },
     "C:\\Users\\angry\\OneDrive\\Desktop\\Blockchain\\nft-marketplace\\src\\backend\\contracts\\Marketplace.sol": {
-      "lastModificationDate": 1699181758542,
-      "contentHash": "108aba6259f57fbe1f395e6c92d36f71",
+      "lastModificationDate": 1699192508830,
+      "contentHash": "c18ccf579a076d559aa88871b1dcfd44",
       "sourceName": "src/backend/contracts/Marketplace.sol",
       "solcConfig": {
         "version": "0.8.4",
