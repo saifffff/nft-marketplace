@@ -1,0 +1,27 @@
+Task Overview : 
+    Make Basic NFT marketplace ( Using solidity contracts and testnet Rinkeby or Matic Testnet )  Ex : Opensea.io
+
+    Features :  
+    1) Users login using metamask, 
+    2) Mint tokens 
+    3) Sell tokens 
+    4) Royalty 
+    5) Upload image using ipfs. 
+
+    UI/UX Design : Basic like Ui/ux in React.js and web3.js
+
+
+
+    basic setup is ready: lets start 
+    we will be using hardhat for writing testing and deploying the solidity smart contract for the nft's as well as the market place,
+    and reactJS for the front-end interactions.
+
+    lets start by adding dependencies :)
+
+    1 - we will need REACT-ROUTER-DOM for navigations since it doesn't comes bundled with the react
+    2 - since we will be using IPFS we will also require HTTP IPFS CLIENT
+    3- Also we will use OPENZeppelin to build secure smart contracts. It is essentially a contract library.
+
+    
+
+
