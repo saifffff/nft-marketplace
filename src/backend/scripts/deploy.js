@@ -14,9 +14,9 @@ async function main() {
   const mkp = await MKP.deploy(1);
 
   console.log("Marketplace Contract Address : ", mkp.address);
-  
+
   // For each contract, pass the deployed contract and name to this function to save a copy of the contract ABI and address to the front end.
-  saveFrontendFiles(mkp,"Marketplace");
+  saveFrontendFiles(mkp, "Marketplace");
 }
 
 function saveFrontendFiles(contract, name) {
