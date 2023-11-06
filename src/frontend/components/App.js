@@ -3,6 +3,11 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 //components
 import Navigation from './navbar';
+import { Spinner } from 'react-bootstrap';
+import Home from './home';
+import Create from './create';
+import MyListedItems from './my-listed-items';
+import MyPurchases from './my-purchases';
 
 import { ethers } from "ethers"; // to connect metamask and metamask is connect to blockchain (local hardhat node rnw);
 import mkpABI from '../contractsData/Marketplace.json'
@@ -30,6 +35,15 @@ function App() {
     // get signer 
     const signer = provider.getSigner()
 
+    window.ethereum.on('chainChanged', (chainId) => {
+      window.location.reload();
+    })
+
+    window.ethereum.on('accountsChanged', async function (accounts) {
+      setAccount(accounts[0])
+      await web3Handler()
+    })
+
     // load contracts from the blockchain
     loadContracts(signer)
   }
@@ -51,7 +65,29 @@ function App() {
         <>
           <Navigation web3Handler={web3Handler} account={account} />
         </>
-        <h1> Welcome to your favorite NFT Store </h1>
+        {
+          loading ? ( // when loading data from blockchain
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+              <Spinner animation="border" style={{ display: 'flex' }} />
+              <p className='mx-3 my-0'>Awaiting Metamask Connection...</p>
+            </div>
+          ) : ( // when finished loading
+            <Routes>
+              <Route path='/' element={
+                <Home marketplace={marketPlace} nft={nft} />
+              } />
+              <Route path='/create' element={
+                <Create marketplace={marketPlace} nft={nft} />
+              } />
+              <Route path='/my-listed-items' element={
+                <MyListedItems marketplace={marketPlace} nft={nft} account={account} />
+              } />
+              <Route path='/my-purchases' element={
+                <MyPurchases marketplace={marketPlace} nft={nft} account={account} />
+              } />
+            </Routes>
+          )
+        }
       </div>
     </BrowserRouter>
   );
