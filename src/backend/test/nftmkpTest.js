@@ -7,13 +7,15 @@ const toWei = (num) => ethers.utils.parseEther(num.toString())  // 1 eth == 10^1
 const fromWei = (num) => ethers.utils.formatEther(num)
 
 describe("NFT-Marketplace", async function(){
-    let deployer, addr1, addr2, nft, mkp
-    let URI = "sample uri";
+    let deployer, addr1, addr2, nft, mkp;
+    let addrs;
+    let feePercent = 1;
+    let URI = "sample URI";
     beforeEach(async function(){ // is a hook that get exec before each test in the suite
         // to write  test against contracts we require their ABI
         const NFT = await ethers.getContractFactory("NFT");
         const Marketplace = await ethers.getContractFactory("Marketplace");
-        [deployer, addr1, addr2] = await ethers.getSigners();
+        [deployer, addr1, addr2, ...addrs] = await ethers.getSigners();
     
         // deploying contracts
         nft = await NFT.deploy();
@@ -89,6 +91,73 @@ describe("NFT-Marketplace", async function(){
             ).to.be.revertedWith("price must be greater than zero");
         })
         
+    })
+
+    // purchase tests
+    describe("Purchasing form marketplace tests", function(){
+        let price = 2;
+        let fee = (feePercent/100)*price
+        let totalPriceInWei
+        beforeEach(async function(){
+            // addr1 will mint an nft
+            await nft.connect(addr1).mint(URI)
+            // addr1 will now approve the marketplace to list its nft
+            await nft.connect(addr1).setApprovalForAll(mkp.address,true)
+            // addr1 will make a listing on items in marketplace
+            await mkp.connect(addr1).makeItem(nft.address,1,toWei(2))
+
+        })
+        // success case
+        it("Should update item as sold, pay seller, transfer NFT to buyer, charge fee and emit a bought event", async function(){
+            const sellerBalance = await addr1.getBalance();
+            const feeAccountBalance = await deployer.getBalance();
+            //fetch total price of the item
+            totalPriceInWei = await mkp.getTotalPrice(1); 
+            // now we will make address2 to purchase this item
+            await expect(mkp.connect(addr2).purchaseItem(1,{value:totalPriceInWei}))
+            .to.emit(mkp,"Bought")
+            .withArgs(
+                1,
+                nft.address,
+                1,
+                toWei(price),
+                addr1.address,
+                addr2.address
+            )
+
+            const sellerFinalBalance = await addr1.getBalance();
+            const feeAccountFinalBalance = await deployer.getBalance();
+            // item should be marked as sold 
+            expect((await mkp.items(1)).sold).to.equal(true)
+            // seller should receive payment for the price at the nft sold.
+            expect(+fromWei(sellerFinalBalance)).to.equal(+price + +fromWei(sellerBalance))
+            // feeAccount should receive fee 
+            expect(+fromWei(feeAccountFinalBalance)).to.equal(+fee + +fromWei(feeAccountBalance))
+            // the buyer should be the new owner of the nft
+            expect(await nft.ownerOf(1)).to.equal(addr2.address);
+
+        })
+
+        // fail cases : testing all the require clauses in our purchase function
+        it("Should fail for invalid item ids, sold items and when not enoght ether is paid", async function(){
+            // for invalid item id
+            await expect(mkp.connect(addr2).purchaseItem(2,{value : totalPriceInWei}))
+            .to.be.revertedWith("Item doesn't exist");
+            await expect(mkp.connect(addr2).purchaseItem(0, {value : totalPriceInWei}))
+            .to.be.revertedWith("Item doesn't exist");
+            // fails when not enoght ether is paid with the transaction.
+            // pov : buyer only pays the price of the item but not the fee
+            await expect(
+                mkp.connect(addr2).purchaseItem(1, {value : toWei(price)})
+            ).to.be.revertedWith("Not enough ether to cover the sale price");
+            // addr2 purchases item 1
+            await mkp.connect(addr2).purchaseItem(1,{value : totalPriceInWei});
+            // addr3 tries to buy item 1 after it has been bought by addr2
+            const addr3 = addrs[0];
+            await expect(mkp.connect(addr3).purchaseItem(1,{value : totalPriceInWei}))
+            .to.be.revertedWith("Item already sold");
+
+        })
     })
 
 })

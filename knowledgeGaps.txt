@@ -1,0 +1,48 @@
+1 => What is NFT ? 
+1 -> NFT is essentially a token. A token is a digital asset that represents something of value, such as a currency, a security, or a commodity.
+     NFTs are unique tokens that are stored on a blockchain and cannot be replicated. This makes them ideal for representing ownership of digital assets, such as artwork, music, and videos.
+     NFTs are different from other types of tokens in a few ways. First, they are non-fungible, which means that they are not interchangeable with one another. This is unlike fungible tokens, such as Bitcoin and Ethereum, which can be traded for one another at any time. Second, NFTs are typically associated with a specific digital asset, such as a piece of art or a music video. 
+     This means that the token itself has value, even if the underlying asset is not being used.
+     NFTs have become increasingly popular in recent years, as people have begun to see the potential of blockchain technology to represent ownership of digital assets. NFTs have been used to sell a wide range of digital assets, including artwork, music, videos, and even in-game items.
+
+2 => IERC721?
+2 -> IERC721 is an interface standard for non-fungible tokens (NFTs) on the Ethereum blockchain. It was created by OpenZeppelin and is used by most NFT marketplaces and projects.
+
+    IERC721 defines a set of functions that must be implemented by all NFT contracts. These functions include:
+
+    balanceOf() - Returns the number of NFTs owned by a given address.
+    ownerOf() - Returns the address of the current owner of a given NFT.
+    transferFrom() - Transfers an NFT from one address to another.
+    approve() - Approves another address to transfer a given NFT on behalf of the current owner.
+    setApprovalForAll() - Approves another address to transfer all NFTs owned by the current owner.
+    IERC721 also defines a number of events that must be emitted by all NFT contracts. These events include:
+
+    Transfer() - Emitted when an NFT is transferred from one address to another.
+    Approval() - Emitted when another address is approved to transfer a given NFT on behalf of the current owner.
+    ApprovalForAll() - Emitted when another address is approved to transfer all NFTs owned by the current owner.
+    By implementing the IERC721 interface, NFT contracts can ensure that they are compatible with all NFT marketplaces and projects that support the ERC721 standard.
+
+    Here are some examples of how the IERC721 interface is used:
+
+    When a user purchases an NFT on an NFT marketplace, the marketplace uses the transferFrom() function to transfer the NFT from the seller's wallet to the buyer's wallet.
+    When a user wants to list their NFT for sale on an NFT marketplace, they use the approve() function to approve the marketplace to transfer the NFT on their behalf.
+    When a user wants to send their NFT to another user, they can use the transferFrom() function to transfer the NFT from their wallet to the other user's wallet.
+    Overall, IERC721 is an important interface standard for NFTs. It ensures that NFT contracts are compatible with all NFT marketplaces and projects that support the ERC721 standard.
+
+3 => tokenURI ?
+3 -> tokenURI is a field in the ERC721 standard that stores the Uniform Resource Identifier (URI) of the NFT's metadata. The metadata is a JSON file that contains information about the NFT, such as its name, description, image, and attributes.
+
+    The tokenURI field is important because it allows NFT marketplaces and other applications to display information about the NFT to users. For example, when a user views an NFT on an NFT marketplace, the marketplace will fetch the NFT's metadata from the tokenURI field and display it to the user.
+
+    The tokenURI field can also be used to store information about the NFT that is not stored on the blockchain. For example, the tokenURI field can be used to store a link to the NFT's high-resolution image or a link to a website that provides more information about the NFT.
+
+    Here is an example of a tokenURI field in an ERC721 contract:
+
+    string public tokenURI;
+
+    constructor() {
+    tokenURI = "https://example.com/nft/123456.json";
+    }
+    The tokenURI field in this contract stores the URL of the NFT's metadata, which is located at https://example.com/nft/123456.json. When an NFT marketplace or other application wants to display information about the NFT, it will fetch the NFT's metadata from this URL.
+
+    Overall, tokenURI is an important field in the ERC721 standard that allows NFT marketplaces and other applications to display information about NFTs to users.

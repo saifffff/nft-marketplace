@@ -31,7 +31,7 @@ contract Marketplace is ReentrancyGuard {
     // to store all the items we use mapping key = item id, value = item struct(object)
     mapping(uint => Item) public items;
 
-    // event
+    // event offered
     event Offered(
         uint itemId,
         address indexed nft, 
@@ -40,6 +40,15 @@ contract Marketplace is ReentrancyGuard {
         address indexed seller
     );
 
+    // event bought
+    event Bought(
+        uint itemId,
+        address indexed nft, 
+        uint tokenId,
+        uint price,  
+        address indexed seller,
+        address indexed buyer
+    );
 
     
 
@@ -66,7 +75,7 @@ contract Marketplace is ReentrancyGuard {
             false
         );
         
-        // emit the offered event
+        // emit the offered event on adding an item
         emit Offered(
             itemCount,
             address(_nft),
@@ -75,5 +84,41 @@ contract Marketplace is ReentrancyGuard {
             msg.sender
         );
 
+    }
+
+    // function that allows users to purchase nft
+    function purchaseItem(uint _itemId) external payable nonReentrant {
+        uint _totalPrice = getTotalPrice(_itemId);
+        Item storage item = items[_itemId];
+        // verify if the item id is valid
+        require(_itemId > 0 && _itemId <= itemCount,"Item doesn't exist");
+        // to make sure we have enough ether for the transaction
+        require(msg.value >= _totalPrice, "Not enough ether to cover the sale price");
+        // to make sure the nft hasn't already been sold
+        require(!item.sold,"Item already sold");
+        // pay seller 
+        item.seller.transfer(item.price);
+        // pay fee 
+        feeAccount.transfer(_totalPrice - item.price);
+        // update item to sold
+        item.sold = true;
+        // finally transfer nft to the buyer
+        item.nft.transferFrom(address(this), msg.sender, item.tokenId);
+
+        // emit bought event
+        emit Bought(
+            _itemId,
+            address(item.nft),
+            item.tokenId,
+            item.price,
+            item.seller,
+            msg.sender
+        );
+
+    }
+
+    // compute final price of an item
+    function getTotalPrice (uint _itemId) view public returns(uint){
+        return(items[_itemId].price*(100 + feePercent) / 100);
     }
 }

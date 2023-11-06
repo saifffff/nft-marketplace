@@ -10,8 +10,6 @@ Task Overview :
 
     UI/UX Design : Basic like Ui/ux in React.js and web3.js
 
-
-
     basic setup is ready: lets start 
     we will be using hardhat for writing testing and deploying the solidity smart contract for the nft's as well as the market place,
     and reactJS for the front-end interactions.
