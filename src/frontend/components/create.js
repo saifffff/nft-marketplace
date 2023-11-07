@@ -25,12 +25,13 @@ const Create = ({ marketplace, nft }) => {
     if (typeof file !== 'undefined') {
       try {
         const result = await client.add(file)
-        //console.log(result)
+        console.log(result)
         setImage(`https://saif-nft.infura-ipfs.io/ipfs/${result.path}`)
       } catch (error){
         console.log("ipfs image upload error: ", error)
       }
     }
+    
   }
   const createNFT = async () => {
     if (!image || !price || !name || !description) return
@@ -42,6 +43,7 @@ const Create = ({ marketplace, nft }) => {
     }
   }
   const mintThenList = async (result) => {
+    console.log("trying to mint")
     const uri = `https://saif-nft.infura-ipfs.io/ipfs/${result.path}`
     //console.log("mint then list uri : ",uri)
     // mint nft 
@@ -53,7 +55,7 @@ const Create = ({ marketplace, nft }) => {
     // add nft to marketplace
     const listingPrice = ethers.utils.parseEther(price.toString())
     await(await marketplace.makeItem(nft.address, id, listingPrice)).wait()
-    //console.log("mint then listed")
+    console.log("minted then listed")
   }
   return (
     <div className="container-fluid mt-5">

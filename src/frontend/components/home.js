@@ -6,7 +6,7 @@ const Home = ({ marketplace, nft }) => {
   const [loading, setLoading] = useState(true)
   const [items, setItems] = useState([])
   const loadMarketplaceItems = async () => {
-    //console.log("loadmarketplaceitems")
+    console.log("loadmarketplaceitems")
     // Load all unsold items
     const itemCount = await marketplace.itemCount()
     let items = []
