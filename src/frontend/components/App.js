@@ -17,6 +17,7 @@ import nftABI from '../contractsData/NFT.json'
 
 
 function App() {
+  document.title = "NFT Shopper"
   // loading hook to keep track of when our app is loading data from the blockchain (initially true we can set it to false when finished loading)
   const [loading, setLoading] = useState(true)
   // account useState Hook
