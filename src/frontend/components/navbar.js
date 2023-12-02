@@ -8,7 +8,7 @@ const Navigation = ({web3Handler, account})=>{
             <Container>
                 <Navbar.Brand href="http://www.github.com/saifffff/nft-marketplace">
                     <img src={market} width="40" height="40" className="" alt="" />
-                    &nbsp; Saif's NFT Marketplace
+                    &nbsp;  NFT Shoppe
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">

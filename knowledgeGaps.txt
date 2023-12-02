@@ -46,3 +46,19 @@
     The tokenURI field in this contract stores the URL of the NFT's metadata, which is located at https://example.com/nft/123456.json. When an NFT marketplace or other application wants to display information about the NFT, it will fetch the NFT's metadata from this URL.
 
     Overall, tokenURI is an important field in the ERC721 standard that allows NFT marketplaces and other applications to display information about NFTs to users.
+
+
+4 => Events in Solidity Smart Contract?
+4 -> In Solidity, events are a way for smart contracts to communicate with the outside world. 
+    They are used to notify external entities, such as user interfaces or other smart contracts, 
+    about specific occurrences within the smart contract. Events are emitted from within the smart contract code, and they can be captured and processed by external applications.
+
+5 => What is window.Ethereum ?
+5 -> window.ethereum is a global JavaScript object that provides access to the Ethereum Web3 API. 
+    This API allows websites to interact with Ethereum blockchains, such as sending and receiving Ether, 
+    deploying and interacting with smart contracts, and more.
+    The window.ethereum object is only available in browsers that have an Ethereum wallet installed, such as MetaMask. 
+    If the window.ethereum object is not available, then the website cannot interact with Ethereum.
+
+
+

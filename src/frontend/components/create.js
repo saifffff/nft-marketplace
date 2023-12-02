@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { ethers } from "ethers"
 import { Row, Form, Button } from 'react-bootstrap'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
+
+
+// infura ipfs api connection
 const projectId = process.env.REACT_APP_PROJECT_ID;
 const projectSecretKey = process.env.REACT_APP_PROJECT_KEY;
 const authorization = "Basic "+ btoa(projectId + ":" + projectSecretKey);
@@ -19,6 +22,9 @@ const Create = ({ marketplace, nft }) => {
   const [price, setPrice] = useState(null)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [loading, setLoading] = useState('')
+
+
   const uploadToIPFS = async (event) => {
     event.preventDefault()
     const file = event.target.files[0]
@@ -35,10 +41,13 @@ const Create = ({ marketplace, nft }) => {
   }
   const createNFT = async () => {
     if (!image || !price || !name || !description) return
+    setLoading(true)
     try{
       const result = await client.add(JSON.stringify({image, price, name, description}))
       mintThenList(result)
+      
     } catch(error) {
+      setLoading(false)
       console.log("ipfs uri upload error: ", error)
     }
   }
@@ -54,8 +63,11 @@ const Create = ({ marketplace, nft }) => {
     await(await nft.setApprovalForAll(marketplace.address, true)).wait()
     // add nft to marketplace
     const listingPrice = ethers.utils.parseEther(price.toString())
+    
     await(await marketplace.makeItem(nft.address, id, listingPrice)).wait()
     console.log("minted then listed")
+    setLoading(false)
+    //window.location.href = '/myListedItems';
   }
   return (
     <div className="container-fluid mt-5">
@@ -73,8 +85,8 @@ const Create = ({ marketplace, nft }) => {
               <Form.Control onChange={(e) => setDescription(e.target.value)} size="lg" required as="textarea" placeholder="Description" />
               <Form.Control onChange={(e) => setPrice(e.target.value)} size="lg" required type="number" placeholder="Price in ETH" />
               <div className="d-grid px-0">
-                <Button onClick={createNFT} variant="primary" size="lg">
-                  Create & List NFT!
+                <Button onClick={createNFT} variant="primary" size="lg" disabled={loading}>
+                {loading ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : 'Create & List NFT!'}
                 </Button>
               </div>
             </Row>
